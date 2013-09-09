@@ -1,0 +1,12 @@
+//esto no se mostrara
+/*Codigo like a boss*/
+int like_boss = 1;
+if(like_boss = 1)
+{
+   printf("%d",like_boss);
+}
+/*/*
+
+*/
+//ni estooooooo
+/*wejncbhjwbevjckne*/

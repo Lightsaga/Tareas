@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1378608612 source:c:\users\vizardespa\desktop\semestre5\sistemas operativos\sistemasoperativos-quitarcomentarios\main.c
+	<stdio.h>
+	<stdlib.h>
+
