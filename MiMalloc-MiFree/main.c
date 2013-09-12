@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static char memory[1000];
-static char memorystatus[1000];
+typedef struct _block
+{
+    char value;
+    char status;
+}block;
+
+static block memory[1000];
 void* MiMalloc(size_t st)
 {
     void* pointer;
@@ -12,20 +17,20 @@ void* MiMalloc(size_t st)
     int i;
     for(i=0;i<sizeof(memory);i++)
     {
-        if(memorystatus[i]=='t'&&v=='f')
+        if(memory[i].status==0x0&&v=='f')
         {
             pointer =&memory[i];
             n=i;
             v='t';
             aux++;
         }
-        else if(memorystatus[i]!='t'&&v=='t')
+        else if(memory[i].status!=0x0&&v=='t')
         {
             pointer =0x0;
             v='f';
             aux=0;
         }
-        else if(memorystatus[i]=='t'&&v=='t')
+        else if(memory[i].status==0x0&&v=='t')
         {
             aux++;
         }
@@ -36,11 +41,11 @@ void* MiMalloc(size_t st)
             {
                 if(n==i-1)
                 {
-                    memorystatus[n]='e';
+                    memory[n].status='e';
                 }
-                else if(memorystatus[n]!='e')
+                else if(memory[n].status!='e')
                 {
-                    memorystatus[n]='f';
+                    memory[n].status='f';
                 }
 
             }
@@ -49,38 +54,34 @@ void* MiMalloc(size_t st)
     }
     return pointer;
 }
-
 void MiFree(void* ptr)
 {
     char* ptr2 = (char*) ptr;
     while(*ptr2!='e')
     {
-        *ptr2='t';
+        *ptr2=0x0;
         ptr2++;
     }
-    *ptr2='t';
+    *ptr2=0x0;
 }
 
 int main()
 {
-    memset(memorystatus,'t',100);
     printf("Hello world!\n");
-    printf("Memoria Vacia\n");
-    puts(memorystatus);
-    void* ptra = (MiMalloc(5));
-    //MiFree(ptra);
-    void* ptrb = (MiMalloc(10));
+    void* ptra = (MiMalloc(10));
+    void* ptrb = (MiMalloc(5));
     void* ptrc = (MiMalloc(15));
-    printf("Memoria con memoria asignada\n");
-    puts(memorystatus);
-    printf("Punteros\n");
+    MiFree(ptrb);
+    void* ptrd = (MiMalloc(3));
+    printf("Punteros:\n");
     int a = (unsigned) ptra;
     int b = (unsigned) ptrb;
     int c = (unsigned) ptrc;
+    int d = (unsigned) ptrd;
     printf("%u\n",a);
     printf("%u\n",b);
     printf("%u\n",c);
-
+    printf("%u\n",d);
     return 0;
 }
 
