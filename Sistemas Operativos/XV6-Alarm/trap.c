@@ -67,21 +67,21 @@ trap(struct trapframe *tf)
         cprintf("%d\n",proc->alarmticks);
 	cprintf("%d\n",proc->alarmhandler);
 	cprintf("%d\n",proc->pid);*/
-	static int i =0;
+	//static int i =0;
         if(proc->alarmticks == proc->ticksInicio)
 	{ 
-	  i++;
+	  //i++;
           //cprintf("%d\n",i);
 	  //cprintf("Hola entre al segundo if\n");
           proc->ticksInicio = 0;  
           tf->esp -= 4;      
           *((uint *)(tf->esp)) = tf->eip;  
           tf->eip =(uint) proc->alarmhandler;
-	  if(i>1)
+	  /*if(i>1)
 	  {
 	     kill(proc->pid);
 	     i=0;
-	  }
+	  }*/
         }  
       }  
     lapiceoi();

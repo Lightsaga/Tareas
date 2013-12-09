@@ -2,23 +2,30 @@
 #include "stat.h"
 #include "user.h"
 
+
+int getpid(void);
+
 void prueba()
 {	
 	printf(1,"Hola soy la prueba\n");
+	exit();
 }
 void pruebaM()
 {	
 	printf(1,"Hola soy la pruebaM\n");
+	exit();
 }
 
-void pruebaS()
+void GetPIDAlarm()
 {	
-	printf(1,"Hola soy la pruebaS\n");
+	printf(1,"El PID del proceso es: %d\n",getpid());
+	exit();
 }
 
 void pruebaR()
 {	
 	printf(1,"Hola soy la pruebaR\n");
+	exit();
 }
 
 
@@ -39,7 +46,7 @@ int main(int argc, char **argv)
 	    //printf(1, "ls: directory:  %d\n", &prueba);
 	    //printf(1,argv[1]);
             //alarm(X,(void (*)())argv[2]);
-            alarm(X,&prueba);
+            alarm(X,&GetPIDAlarm);
    	    while(1){}
 	}
     else
