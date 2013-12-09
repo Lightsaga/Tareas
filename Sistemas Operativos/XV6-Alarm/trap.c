@@ -8,6 +8,8 @@
 #include "traps.h"
 #include "spinlock.h"
 
+int ticksG=0;
+
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
 extern uint vectors[];  // in vectors.S: array of 256 entry pointers
@@ -45,7 +47,8 @@ trap(struct trapframe *tf)
       exit();
     return;
   }
-
+  //cprintf("Hola inicio");
+  
   switch(tf->trapno){
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
@@ -53,8 +56,36 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
+      ticksG++;
+      //cprintf("%d\n",proc->ticksInicio);
     }
+    if(proc && (tf->cs & 3) == 3)
+	{  
+        proc->ticksInicio++;  
+	/*cprintf("Hola entre al primer if\n");
+	cprintf("%d\n",proc->ticksInicio);
+        cprintf("%d\n",proc->alarmticks);
+	cprintf("%d\n",proc->alarmhandler);
+	cprintf("%d\n",proc->pid);*/
+	static int i =0;
+        if(proc->alarmticks == proc->ticksInicio)
+	{ 
+	  i++;
+          //cprintf("%d\n",i);
+	  //cprintf("Hola entre al segundo if\n");
+          proc->ticksInicio = 0;  
+          tf->esp -= 4;      
+          *((uint *)(tf->esp)) = tf->eip;  
+          tf->eip =(uint) proc->alarmhandler;
+	  if(i>1)
+	  {
+	     kill(proc->pid);
+	     i=0;
+	  }
+        }  
+      }  
     lapiceoi();
+//cprintf("%d\n",ticks);
     break;
   case T_IRQ0 + IRQ_IDE:
     ideintr();

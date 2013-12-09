@@ -1,6 +1,8 @@
 // Segments in proc->gdt.
 #define NSEGS     7
 
+extern int ticksG;
+
 // Per-CPU state
 struct cpu {
   uchar id;                    // Local APIC ID; index into cpus[] below
@@ -66,6 +68,9 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  int alarmticks;	       // Ticks required for the alarm to work
+  void (*alarmhandler)();      // Alarm Handler
+  int ticksInicio;		       // Ticks
 };
 
 // Process memory is laid out contiguously, low addresses first:
